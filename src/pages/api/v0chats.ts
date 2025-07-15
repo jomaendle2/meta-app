@@ -18,6 +18,7 @@ export default async function handler(
 
         return res.status(200).json({ chats: chats.data });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("/api/v0chats error:", error);
       return res.status(500).json({ error: error.message || "Unknown error" });
