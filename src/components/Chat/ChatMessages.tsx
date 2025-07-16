@@ -1,9 +1,9 @@
 "use client";
 
 import { V0Chat, V0ChatMessage } from "@/features/v0chat/types";
+import { useEffect, useRef } from "react";
 import { Skeleton } from "../ui/skeleton";
 import StreamingMessage from "./StreamingMessage";
-import { useEffect, useRef } from "react";
 
 export default function ChatMessages({
   chat,
@@ -43,7 +43,7 @@ export default function ChatMessages({
 
   // Use chat.messages if present, otherwise show nothing
   const messages: V0ChatMessage[] = Array.isArray(chat.messages)
-    ? chat.messages.filter(msg => msg && typeof msg.content === 'string')
+    ? chat.messages.filter((msg) => msg && typeof msg.content === "string")
     : [];
 
   return (
@@ -52,7 +52,7 @@ export default function ChatMessages({
         <StreamingMessage
           key={msg.id}
           content={msg.content || ""}
-          isUser={msg.type === "user"}
+          isUser={msg.role === "user"}
           isStreaming={index === messages.length - 1 && isLoading}
           onCopy={() => {
             // Handle copy action
@@ -66,7 +66,7 @@ export default function ChatMessages({
           }}
         />
       ))}
-      
+
       {/* Loading indicator for new messages */}
       {isLoading && messages.length > 0 && (
         <div className="flex items-start space-x-3">
@@ -76,13 +76,19 @@ export default function ChatMessages({
           <div className="flex items-center space-x-2">
             <div className="flex space-x-1">
               <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
-              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
-              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+              <div
+                className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              />
+              <div
+                className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              />
             </div>
           </div>
         </div>
       )}
-      
+
       <div ref={messagesEndRef} />
     </div>
   );
