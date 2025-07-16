@@ -1,10 +1,5 @@
-import Chat from "@/components/Chat/Chat";
+import EnhancedChat from "@/components/Chat/EnhancedChat";
 
 export default function HomePage() {
-  return (
-    <main>
-      <h1 className="text-2xl font-bold mb-4">Meta App</h1>
-      <Chat />
-    </main>
-  );
+  return <EnhancedChat />;
 }

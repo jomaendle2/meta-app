@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { V0Chat, V0ChatResponse } from "./types";
 
 export function useV0Chat() {
@@ -9,7 +9,7 @@ export function useV0Chat() {
   const [error, setError] = useState<string | null>(null);
 
   // Load all previous chats (from API)
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -25,7 +25,7 @@ export function useV0Chat() {
       setError(e instanceof Error ? e.message : String(e));
     }
     setLoading(false);
-  };
+  }, []);
 
   // Select a chat by id (from API)
   const selectChat = async (chatId: string) => {
