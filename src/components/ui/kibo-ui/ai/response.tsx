@@ -1,4 +1,5 @@
 "use client";
+// eslint-disable-next-file no-unused-vars
 
 import {
   type BundledLanguage,
