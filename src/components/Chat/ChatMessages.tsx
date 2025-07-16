@@ -1,7 +1,10 @@
+"use client";
+
 import { V0Chat, V0ChatMessage } from "@/features/v0chat/types";
 import { Avatar } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import AIResponse from "../ui/kibo-ui/ai/response";
 
 export default function ChatMessages({
   chat,
@@ -38,7 +41,7 @@ export default function ChatMessages({
         <div key={msg.id} className="flex items-start gap-2 mb-4">
           <Avatar />
           <div className="bg-muted rounded-lg px-3 py-2">
-            <span>{msg.content}</span>
+            <AIResponse>{msg.content}</AIResponse>
           </div>
         </div>
       ))}
