@@ -1,5 +1,5 @@
-import EnhancedChat from "@/components/Chat/EnhancedChat";
+import Chat from "@/components/Chat/Chat";
 
 export default function HomePage() {
-  return <EnhancedChat />;
+  return <Chat />;
 }

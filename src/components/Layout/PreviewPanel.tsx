@@ -4,17 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { V0Chat } from "@/features/v0chat/types";
-import { 
-  ExternalLinkIcon, 
-  CodeIcon, 
-  SmartphoneIcon, 
-  TabletIcon, 
-  MonitorIcon,
+import { cn } from "@/lib/utils";
+import {
+  CodeIcon,
   DownloadIcon,
-  ShareIcon
+  ExternalLinkIcon,
+  MonitorIcon,
+  ShareIcon,
+  SmartphoneIcon,
+  TabletIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 interface PreviewPanelProps {
   chat: V0Chat | null;
@@ -59,18 +59,10 @@ export default function PreviewPanel({ chat }: PreviewPanelProps) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Preview</h2>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <ShareIcon className="w-4 h-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <DownloadIcon className="w-4 h-4" />
             </Button>
           </div>
@@ -140,17 +132,16 @@ export default function PreviewPanel({ chat }: PreviewPanelProps) {
       </div>
 
       {/* Preview Content */}
-      <ScrollArea className="flex-1">
-        <div className="p-4">
-          {showCode ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Generated Code</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <pre className="text-xs bg-muted p-4 rounded overflow-x-auto">
-                  <code>
-                    {`// Generated React Component
+      <ScrollArea className="flex-1 h-full [&>*]:h-full">
+        {showCode ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Generated Code</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <pre className="text-xs bg-muted p-4 rounded overflow-x-auto">
+                <code>
+                  {`// Generated React Component
 import React from 'react';
 
 export default function Component() {
@@ -160,34 +151,33 @@ export default function Component() {
     </div>
   );
 }`}
-                  </code>
-                </pre>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="flex justify-center">
-              <div className={cn(
-                "transition-all duration-300 border rounded-lg bg-background",
-                getViewportClass()
-              )}>
-                {chat.demo ? (
-                  <iframe
-                    src={chat.demo}
-                    className="w-full h-96 border-0 rounded-lg"
-                    title="Component Preview"
-                  />
-                ) : (
-                  <div className="h-96 flex items-center justify-center text-muted-foreground">
-                    <div className="text-center">
-                      <MonitorIcon className="w-8 h-8 mx-auto mb-2" />
-                      <p className="text-sm">No preview available</p>
-                    </div>
-                  </div>
-                )}
+                </code>
+              </pre>
+            </CardContent>
+          </Card>
+        ) : (
+          <div
+            className={cn(
+              "transition-all duration-300 border bg-background h-full",
+              getViewportClass()
+            )}
+          >
+            {chat.demo ? (
+              <iframe
+                src={chat.demo}
+                className="w-full border-0 h-full"
+                title="Component Preview"
+              />
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted-foreground">
+                <div className="text-center">
+                  <MonitorIcon className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-sm">No preview available</p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </ScrollArea>
     </div>
   );

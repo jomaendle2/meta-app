@@ -1,13 +1,20 @@
 "use client";
+
+import AppSidebar from "@/components/Layout/AppSidebar";
+import Header from "@/components/Layout/Header";
+import PreviewPanel from "@/components/Layout/PreviewPanel";
+import { Alert } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useV0Chat } from "@/features/v0chat/useV0Chat";
 import { useEffect } from "react";
-
-import { Alert } from "../ui/alert";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
-import ChatInput from "./ChatInput";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "../ui/resizable";
 import ChatMessages from "./ChatMessages";
-import ChatPreview from "./ChatPreview";
+import EnhancedChatInput from "./EnhancedChatInput";
 
 export default function Chat() {
   const {
@@ -23,66 +30,104 @@ export default function Chat() {
 
   useEffect(() => {
     loadChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadChats]);
 
   return (
-    <div className="flex max-w-4xl mx-auto mt-10 gap-6">
-      {/* Sidebar for previous chats */}
-      <aside className="w-64 border-r pr-4 flex flex-col">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-bold text-lg">Previous Chats</h3>
-          <button
-            className="text-xs px-2 py-1 bg-primary text-primary-foreground rounded"
-            onClick={newChat}
-            title="Start a new chat"
-          >
-            + New
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          {chats.length === 0 && (
-            <div className="text-muted-foreground text-sm">
-              No previous chats
-            </div>
-          )}
-          <ul>
-            {chats.map((c) => (
-              <li key={c.id}>
-                <button
-                  className={`w-full text-left px-2 py-1 rounded hover:bg-muted ${
-                    chat && chat.id === c.id ? "bg-muted font-bold" : ""
-                  }`}
-                  onClick={() => selectChat(c.id)}
-                  disabled={loading}
-                >
-                  {c.title || c.id}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </aside>
-      {/* Main chat area */}
-      <Card className="flex-1">
-        <CardHeader>
-          <h2 className="text-xl font-bold">
-            v0 Chat: Create React Components
-          </h2>
-        </CardHeader>
-        <CardContent>
-          {chat ? (
-            <ChatMessages chat={chat} isLoading={loading} />
-          ) : (
-            <Skeleton className="h-96 w-full" />
-          )}
-          {error && <Alert variant="destructive">{error}</Alert>}
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <ChatInput onSend={sendMessage} loading={loading} />
-          <ChatPreview chat={chat} />
-        </CardFooter>
-      </Card>
-    </div>
+    <SidebarProvider>
+      <div className="h-screen flex w-full">
+        <AppSidebar
+          chats={chats}
+          currentChat={chat}
+          onSelectChat={selectChat}
+          onNewChat={newChat}
+          loading={loading}
+        />
+        <SidebarInset className="flex flex-col h-full">
+          <Header onNewChat={newChat} />
+          <div className="flex-1 flex overflow-hidden">
+            <ResizablePanelGroup direction="horizontal" className="flex-1">
+              {/* Main chat area */}
+              <ResizablePanel defaultSize={60} minSize={30}>
+                <main className="flex flex-col h-full flex-1">
+                  {/* Chat messages */}
+                  <div className="flex-1 overflow-hidden">
+                    <ScrollArea className="h-full">
+                      <div className="p-6">
+                        {chat ? (
+                          <ChatMessages chat={chat} isLoading={loading} />
+                        ) : (
+                          <div className="h-full flex items-center justify-center">
+                            <div className="text-center max-w-md">
+                              <div className="mb-8">
+                                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                  <span className="text-2xl">🎨</span>
+                                </div>
+                                <h2 className="text-2xl font-bold mb-2">
+                                  Create React Components
+                                </h2>
+                                <p className="text-muted-foreground">
+                                  Describe the component you want to build, and
+                                  I&apos;ll create it for you using modern React
+                                  patterns and Tailwind CSS.
+                                </p>
+                              </div>
+                              <div className="text-left space-y-2">
+                                <div className="bg-muted/50 rounded-lg p-3">
+                                  <p className="text-sm font-medium">
+                                    💡 Try asking:
+                                  </p>
+                                  <ul className="text-sm text-muted-foreground mt-1 space-y-1">
+                                    <li>
+                                      • &quot;Create a pricing card
+                                      component&quot;
+                                    </li>
+                                    <li>
+                                      • &quot;Build a modern login form&quot;
+                                    </li>
+                                    <li>
+                                      • &quot;Design a dashboard sidebar&quot;
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </ScrollArea>
+                  </div>
+
+                  {/* Error display */}
+                  {error && (
+                    <div className="p-4 border-t">
+                      <Alert variant="destructive">{error}</Alert>
+                    </div>
+                  )}
+
+                  {/* Chat input */}
+                  <div className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                    <div className="p-4">
+                      <EnhancedChatInput
+                        onSend={sendMessage}
+                        loading={loading}
+                      />
+                    </div>
+                  </div>
+                </main>
+              </ResizablePanel>
+
+              <ResizableHandle withHandle />
+
+              {/* Preview panel */}
+              <ResizablePanel defaultSize={40} minSize={20}>
+                <aside className="size-full border-l border-border bg-card flex flex-col">
+                  <PreviewPanel chat={chat} />
+                </aside>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }

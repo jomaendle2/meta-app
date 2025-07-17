@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MoonIcon, SunIcon, PlusIcon, SettingsIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface HeaderProps {
   onNewChat: () => void;
@@ -26,6 +27,7 @@ export default function Header({ onNewChat }: HeaderProps) {
       <div className="flex h-full items-center justify-between px-6">
         {/* Logo and branding */}
         <div className="flex items-center space-x-4">
+          <SidebarTrigger />
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">AI</span>

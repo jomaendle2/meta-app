@@ -3,7 +3,7 @@ export type V0ChatMessage = {
   object: "message";
   content: string;
   createdAt: string;
-  type: string;
+  role: string;
 };
 
 export type V0Chat = {
